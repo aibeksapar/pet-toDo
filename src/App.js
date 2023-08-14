@@ -1,8 +1,27 @@
 import { useState } from "react";
 import icons from "./icons.svg";
 
+const initArr = [
+  {
+    id: 1,
+    content: "test1",
+    category: "smth",
+    dateString: "Wed, Aug 9",
+    date: 1692003638859,
+    completed: false,
+  },
+  {
+    id: 2,
+    content: "test2",
+    category: "smth2",
+    dateString: "Sun, Jul 30",
+    date: 1692003628988,
+    completed: false,
+  },
+];
+
 export default function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(initArr);
 
   function handleAddTask(task) {
     setTasks((tasks) => [...tasks, task]);
@@ -14,17 +33,11 @@ export default function App() {
         item.id === id ? { ...item, completed: !item.completed } : item
       )
     );
-
-    //  setCompletedTasks((completedTasks) => {
-    //    const taskToAdd = tasks.find((task) => task.id === id && !task.completed);
-    //    return taskToAdd ? [...completedTasks, taskToAdd] : completedTasks;
-    //  });
   }
 
   return (
     <>
       <Input onAddTask={handleAddTask} />
-      <Sort />
       <TasksList tasks={tasks} onSelection={handleSelect} />
 
       {/* {completedTasks.length ? (
@@ -48,11 +61,12 @@ function Input({ onAddTask }) {
       id: crypto.randomUUID(),
       content: inputTask,
       category: "uncategorized",
-      date: new Date().toLocaleString("en-US", {
+      dateString: new Date().toLocaleString("en-US", {
         weekday: "short",
         month: "short",
         day: "numeric",
       }),
+      date: new Date().getTime(),
       completed: false,
     };
     onAddTask(newTask);
@@ -76,24 +90,52 @@ function Input({ onAddTask }) {
   );
 }
 
-function Sort() {
-  return (
-    <div className="sort">
-      <span>Sort by:</span>
-      <select>
-        <option>description</option>
-      </select>
-    </div>
-  );
-}
-
 function TasksList({ tasks, onSelection }) {
+  const [sortBy, setSortBy] = useState("newest");
+
+  let sortedTasks;
+
+  if (sortBy === "newest")
+    sortedTasks = tasks.slice().sort((a, b) => b.date - a.date);
+
+  if (sortBy === "oldest")
+    sortedTasks = tasks.slice().sort((a, b) => a.date - b.date);
+
+  if (sortBy === "description-up")
+    sortedTasks = tasks
+      .slice()
+      .sort((a, b) => b.content.localeCompare(a.content));
+
+  if (sortBy === "description-down")
+    sortedTasks = tasks
+      .slice()
+      .sort((a, b) => a.content.localeCompare(b.content));
+
+  if (sortBy === "completed")
+    sortedTasks = tasks.slice().sort((a, b) => b.completed - a.completed);
+
+  if (sortBy === "not-completed")
+    sortedTasks = tasks.slice().sort((a, b) => a.completed - b.completed);
+
   return (
-    <ul className="tasks">
-      {tasks.map((task) => (
-        <Task task={task} onSelection={onSelection} key={task.id} />
-      ))}
-    </ul>
+    <>
+      <div className="sort">
+        <span>Sort by:</span>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="newest">newest</option>
+          <option value="oldest">oldest</option>
+          <option value="completed">completed</option>
+          <option value="not-completed">not completed</option>
+          <option value="description-up">description ⬆</option>
+          <option value="description-down">description ⬇</option>
+        </select>
+      </div>
+      <ul className="tasks">
+        {sortedTasks.map((task) => (
+          <Task task={task} onSelection={onSelection} key={task.id} />
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -116,7 +158,7 @@ function Task({ task, onSelection }) {
               <svg>
                 <use xlinkHref={`${icons}#calendar`}></use>
               </svg>
-              <span>{task.date}</span>
+              <span>{task.dateString}</span>
             </div>
           </div>
         </div>

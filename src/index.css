@@ -16,6 +16,15 @@ h6 {
   margin: 0;
 }
 
+button {
+  cursor: pointer;
+
+  font-family: "Open Sans";
+
+  border: 0;
+  background: 0;
+}
+
 body {
   font-family: "Open Sans";
   position: relative;
@@ -105,7 +114,7 @@ code {
 }
 
 .input input:focus {
-  color: #fff;
+  /* color: #fff; */
   outline: 0;
 }
 
@@ -146,6 +155,7 @@ code {
   overflow: auto;
 }
 .tasks li {
+  position: relative;
   list-style: none;
 }
 
@@ -159,6 +169,42 @@ code {
 
   background-color: #fff;
   border-radius: 8px;
+}
+
+.tasks__actions {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  top: 8px;
+  right: 10px;
+}
+
+.tasks__actions svg {
+  cursor: pointer;
+  fill: rgba(92, 92, 92, 0.65);
+  transition: all 0.3s ease;
+}
+
+.edit-svg {
+  margin-bottom: 10px;
+  width: 18px;
+  height: 26px;
+}
+
+.edit-svg:hover {
+  fill: #17c0dc;
+}
+
+.trash-svg {
+  margin-left: 2px;
+  width: 13px;
+  height: 18px;
+  fill: rgba(92, 92, 92, 0.65);
+}
+
+.trash-svg:hover {
+  fill: rgb(255 54 54 / 77%);
 }
 
 .item--completed {
@@ -269,7 +315,6 @@ code {
   font-size: 17px;
   font-weight: 700;
 
-  border: 0;
   border-radius: 12px;
   background: #22ab00;
 }
@@ -277,4 +322,22 @@ code {
 .completed button svg {
   width: 10px;
   height: 6px;
+}
+
+.reset {
+  display: inline-flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 2px 20px 6px;
+
+  color: #000;
+  font-weight: 500;
+
+  border-radius: 8px;
+  background-color: #d6d6d6;
+  transition: all 0.3s ease;
+}
+
+.reset:hover {
+  background-color: #cdcdcd;
 }

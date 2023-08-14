@@ -35,10 +35,24 @@ export default function App() {
     );
   }
 
+  function handleDelete(id) {
+    setTasks((tasks) => tasks.filter((task) => id !== task.id));
+  }
+
+  function handleReset() {
+    const confirm = window.confirm("Are you sure to delete all notes?");
+    if (confirm) setTasks([]);
+  }
+
   return (
     <>
       <Input onAddTask={handleAddTask} />
-      <TasksList tasks={tasks} onSelection={handleSelect} />
+      <TasksList
+        tasks={tasks}
+        onSelection={handleSelect}
+        onDelete={handleDelete}
+      />
+      {tasks.length > 0 && <Reset onReset={handleReset} />}
 
       {/* {completedTasks.length ? (
         <Completed completedTasks={completedTasks} onSelection={handleSelect} />
@@ -90,7 +104,7 @@ function Input({ onAddTask }) {
   );
 }
 
-function TasksList({ tasks, onSelection }) {
+function TasksList({ tasks, onSelection, onDelete }) {
   const [sortBy, setSortBy] = useState("newest");
 
   let sortedTasks;
@@ -119,27 +133,35 @@ function TasksList({ tasks, onSelection }) {
 
   return (
     <>
-      <div className="sort">
-        <span>Sort by:</span>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="newest">newest</option>
-          <option value="oldest">oldest</option>
-          <option value="completed">completed</option>
-          <option value="not-completed">not completed</option>
-          <option value="description-up">description ⬆</option>
-          <option value="description-down">description ⬇</option>
-        </select>
-      </div>
+      {tasks.length > 0 && (
+        <div className="sort">
+          <span>Sort by:</span>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="newest">newest</option>
+            <option value="oldest">oldest</option>
+            <option value="completed">completed</option>
+            <option value="not-completed">not completed</option>
+            <option value="description-up">description ⬆</option>
+            <option value="description-down">description ⬇</option>
+          </select>
+        </div>
+      )}
+
       <ul className="tasks">
         {sortedTasks.map((task) => (
-          <Task task={task} onSelection={onSelection} key={task.id} />
+          <Task
+            task={task}
+            onSelection={onSelection}
+            onDelete={onDelete}
+            key={task.id}
+          />
         ))}
       </ul>
     </>
   );
 }
 
-function Task({ task, onSelection }) {
+function Task({ task, onSelection, onDelete }) {
   return (
     <li>
       <input type="checkbox" id={task.id} />
@@ -163,7 +185,27 @@ function Task({ task, onSelection }) {
           </div>
         </div>
       </label>
+      <div className="tasks__actions">
+        <button type="button">
+          <svg className="edit-svg">
+            <use xlinkHref={`${icons}#edit`}></use>
+          </svg>
+        </button>
+        <button type="button" onClick={() => onDelete(task.id)}>
+          <svg className="trash-svg">
+            <use xlinkHref={`${icons}#trash`}></use>
+          </svg>
+        </button>
+      </div>
     </li>
+  );
+}
+
+function Reset({ onReset }) {
+  return (
+    <button className="reset" onClick={() => onReset()}>
+      reset
+    </button>
   );
 }
 
@@ -200,6 +242,11 @@ function Completed({ completedTasks, onSelection }) {
                 </div>
               </div>
             </label>
+            <div>
+              <svg>
+                <use xlinkHref={`${icons}#trash`}></use>
+              </svg>
+            </div>
           </li>
         ))}
       </ul>

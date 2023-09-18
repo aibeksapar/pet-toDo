@@ -97,6 +97,26 @@ code {
   animation: 6s rotate linear infinite;
 }
 
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.groups {
+  display: flex;
+  column-gap: 8px;
+}
+
+.group {
+  padding: 2px 8px;
+  background-color: #fff;
+  border-radius: 6px;
+
+  font-size: 16px;
+}
+
 @keyframes rotate {
   to {
     --angle: 360deg;
@@ -123,7 +143,6 @@ code {
 }
 
 .sort {
-  margin-bottom: 10px;
   align-self: flex-end;
 }
 

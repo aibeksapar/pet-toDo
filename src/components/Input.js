@@ -12,7 +12,6 @@ function Input({ onAddTask }) {
     const newTask = {
       id: crypto.randomUUID(),
       content: inputTask,
-      category: "uncategorized",
       dateString: new Date().toLocaleString("en-US", {
         weekday: "short",
         month: "short",

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Task from "./Task";
 import Sort from "./Sort";
-import Group from "./Group";
 
-function TasksList({ tasks, onSelection, onDelete }) {
+function TasksList({ tasks, onSelection, onDelete, addGroup, onAddGroup }) {
   const [sortBy, setSortBy] = useState("newest");
 
   let sortedTasks;
+
+  if (!tasks.length) return;
 
   if (sortBy === "newest")
     sortedTasks = tasks.slice().sort((a, b) => b.date - a.date);
@@ -31,10 +32,7 @@ function TasksList({ tasks, onSelection, onDelete }) {
     sortedTasks = tasks.slice().sort((a, b) => a.completed - b.completed);
   return (
     <>
-      <div className="top">
-        <Group />
-        {tasks.length > 0 && <Sort sortBy={sortBy} onSortBy={setSortBy} />}
-      </div>
+      {tasks.length > 0 && <Sort sortBy={sortBy} onSortBy={setSortBy} />}
 
       <ul className="tasks">
         {sortedTasks.map((task) => (

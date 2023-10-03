@@ -1,34 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Input from "./Input";
 import TasksList from "./TasksList";
 import Reset from "./Reset";
-import Completed from "./Completed";
 
 const initArr = [
   {
     id: 1,
     content: "test1",
-    category: "smth",
     dateString: "Wed, Aug 9",
     date: 1692003638859,
     completed: false,
+    group: null,
   },
   {
     id: 2,
     content: "test2",
-    category: "smth2",
     dateString: "Sun, Jul 30",
     date: 1692003628988,
     completed: false,
+    group: null,
   },
 ];
 
 export default function App() {
-  const [tasks, setTasks] = useState(initArr);
-  const [completed, setCompleted] = useState(
-    initArr.filter((el) => el.completed)
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
   );
+
+  const [addGroup, setAddGroup] = useState(false);
 
   function handleAddTask(task) {
     setTasks((tasks) => [...tasks, task]);
@@ -51,7 +51,13 @@ export default function App() {
     if (confirm) setTasks([]);
   }
 
-  function handleComplete() {}
+  function handleAddGroup() {
+    setAddGroup((state) => !state);
+  }
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <>
@@ -60,6 +66,8 @@ export default function App() {
         tasks={tasks}
         onSelection={handleSelect}
         onDelete={handleDelete}
+        addGroup={addGroup}
+        onAddGroup={handleAddGroup}
       />
       {tasks.length > 0 && <Reset onReset={handleReset} />}
 
